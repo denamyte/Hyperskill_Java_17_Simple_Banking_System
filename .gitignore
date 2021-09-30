@@ -1,0 +1,18 @@
+/.settings
+/target
+/.classpath
+/.project
+.idea
+.gradle
+*.iml
+/nb-configuration.xml
+/nbactions.xml
+
+# EduTools
+/**/out/production/*
+/**/build/classes/*
+/**/build/reports/*
+/**/build/test-results/*
+/**/build/tmp/*
+
+/**/*.class
