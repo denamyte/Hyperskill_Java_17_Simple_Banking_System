@@ -1,7 +1,11 @@
 package banking;
 
+import banking.factories.StateSwitcherFactory;
+import banking.state.StateSwitcher;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, world!");
+        StateSwitcher switcher = StateSwitcherFactory.getStateSwitcher();
+        switcher.run();
     }
 }
