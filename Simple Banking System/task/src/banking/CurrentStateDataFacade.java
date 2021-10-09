@@ -1,24 +1,37 @@
 package banking;
 
 import banking.dao.Card;
+import banking.dao.CardDao;
 import banking.utils.Utils;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class CurrentStateDataFacade {
+    private CardDao cardDao;
+    private Card currentCard;
 
-    private final Map<String, Card> cardMap = new LinkedHashMap<>();
 
-    // TODO: 10/4/21 Dao interfaces go into this constructor
-    public CurrentStateDataFacade() {
+    public CurrentStateDataFacade(CardDao cardDao) {
+        this.cardDao = cardDao;
     }
 
     public Card createCard() {
         String number = "";
-        while (number.isEmpty() || cardMap.containsKey(number)) {
+        while (number.isEmpty() || !cardDao.numberIsUnique(number)) {
             number = Utils.createCardNumber();
         }
-        return new Card(number, Utils.createPin());
+        final Card card = new Card(number, Utils.createPin());
+        cardDao.saveCard(card);
+        return card;
+    }
+
+    public Card getCurrentCard(String number, String pin) {
+        final Card card = cardDao.getCard(number);
+        boolean matches = card != null && pin.equals(card.getPin());
+        if (matches) {
+            this.currentCard = card;
+            return card;
+        } else {
+            this.currentCard = null;
+            return null;
+        }
     }
 }

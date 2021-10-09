@@ -251,6 +251,18 @@ files:
 - name: src/banking/factories/StateSwitcherFactory.java
   visible: true
   learner_created: true
+- name: src/banking/dao/CardDao.java
+  visible: true
+  learner_created: true
+- name: src/banking/dao/impl/memory/MemoryCardDao.java
+  visible: true
+  learner_created: true
+- name: src/banking/dao/impl/sql/package-info.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/93/stages/515/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sat, 09 Oct 2021 22:54:33 UTC
 record: -1

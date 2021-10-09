@@ -19,6 +19,13 @@ class StateMachineFactory {
         CREATE_ACCOUNT,
         LOG_INTO_ACCOUNT,
 
+        WRONG_CARD,
+        LOGGED_IN,
+
+        ACCOUNT_MENU,
+        BALANCE,
+        LOG_OUT,
+
         EXIT
     }
 
@@ -44,14 +51,34 @@ class StateMachineFactory {
                                     menus::createCard
                 ),
                 new StateTransition(State.LOG_INTO_ACCOUNT.name(),
-                                    Map.of(0, State.MAIN_MENU.name()),
-                                    () -> {
-                                        System.out.println("\nUnder construction");
-                                        return 0;
-                                    }
+                                    Map.of(0, State.WRONG_CARD.name(),
+                                           1, State.LOGGED_IN.name()),
+                                    menus::logIntoAccount
                 ),
 
-                // TODO: 10/4/21 Other StateTransition instances go here
+                new StateTransition(State.WRONG_CARD.name(),
+                                    Map.of(0, State.MAIN_MENU.name()),
+                                    menus::wrongCard
+                ),
+                new StateTransition(State.LOGGED_IN.name(),
+                                    Map.of(0, State.ACCOUNT_MENU.name()),
+                                    menus::loggedIn
+                ),
+
+                new StateTransition(State.ACCOUNT_MENU.name(),
+                                    Map.of(1, State.BALANCE.name(),
+                                           2, State.LOG_OUT.name(),
+                                           0, State.EXIT.name()),
+                                    menus::accountMenu
+                ),
+                new StateTransition(State.BALANCE.name(),
+                                    Map.of(0, State.ACCOUNT_MENU.name()),
+                                    menus::balance
+                ),
+                new StateTransition(State.LOG_OUT.name(),
+                                    Map.of(0, State.MAIN_MENU.name()),
+                                    menus::logOut
+                ),
 
                 new StateTransition(State.EXIT.name(),
                                     Map.of(0, ""),
@@ -61,6 +88,5 @@ class StateMachineFactory {
         return Collections.unmodifiableMap(
                 transList.stream().collect(Collectors.toMap(StateTransition::getStateName, s -> s)));
     }
-
 
 }
