@@ -291,6 +291,223 @@ files:
         }
     }
   learner_created: false
+- name: src/banking/utils/Utils.java
+  visible: true
+  text: |
+    package banking.utils;
+
+    import java.util.Random;
+
+    public class Utils {
+
+        private static final Random rnd = new Random();
+        public static final String CARD_PREFIX = "400000";
+
+        private static int randomDigit() {
+            return rnd.nextInt(10);
+        }
+
+        private static void appendDigits(StringBuilder sb, int count) {
+            for (int i = 0; i < count; i++) {
+                sb.append(randomDigit());
+            }
+        }
+
+        public static String createCardNumber() {
+            StringBuilder sb = new StringBuilder(CARD_PREFIX);
+            appendDigits(sb, 9);
+            // TODO: 10/4/21 When the Luhn algorithm is ready, call it, instead of appending 0
+            sb.append(0);
+            return sb.toString();
+        }
+
+        public static String createPin() {
+            StringBuilder sb = new StringBuilder();
+            appendDigits(sb, 4);
+            return sb.toString();
+        }
+    }
+  learner_created: true
+- name: src/banking/factories/StateSwitcherFactory.java
+  visible: true
+  text: |
+    package banking.factories;
+
+    import banking.BankingSystemMenus;
+    import banking.CurrentStateDataFacade;
+    import banking.dao.CardDao;
+    import banking.dao.impl.memory.MemoryCardDao;
+    import banking.state.StateSwitcher;
+
+    public class StateSwitcherFactory {
+
+        static public StateSwitcher getMemoryStateSwitcher() {
+            CardDao cardDao = new MemoryCardDao();
+            return getStateSwitcher(cardDao);
+        }
+
+        static public StateSwitcher getStateSwitcher(CardDao cardDao) {
+            CurrentStateDataFacade dataFacade = new CurrentStateDataFacade(cardDao);
+            BankingSystemMenus menus = new BankingSystemMenus(dataFacade);
+            return new StateMachineFactory(menus).createStateSwitcher();
+        }
+    }
+  learner_created: true
+- name: src/banking/BankingSystemMenus.java
+  visible: true
+  text: |
+    package banking;
+
+    import banking.dao.Card;
+
+    import java.util.Scanner;
+
+    /**
+     * Contains all menus for the Banking System CLI interface
+     * and abstract data layer invocations
+     */
+    public class BankingSystemMenus {
+
+        private final Scanner scanner = new Scanner(System.in);
+        private final CurrentStateDataFacade dataFacade;
+
+        public BankingSystemMenus(CurrentStateDataFacade dataFacade) {
+            this.dataFacade = dataFacade;
+        }
+
+        public int mainMenu() {
+            System.out.println("\n1. Create an account\n" +
+                                       "2. Log into account\n" +
+                                       "0. Exit");
+            return userChoice();
+        }
+
+        public int createCard() {
+            Card card = dataFacade.createCard();
+            System.out.printf("\nYour card has been created\n" +
+                                      "Your card number:\n" +
+                                      "%s\n" +
+                                      "Your card PIN:\n" +
+                                      "%s\n", card.getNumber(), card.getPin());
+            return 0;
+        }
+
+        public int logIntoAccount() {
+            System.out.println("\nEnter your card number:");
+            final String number = scanner.nextLine();
+            System.out.println("Enter your PIN:");
+            final String pin = scanner.nextLine();
+
+            return dataFacade.getCurrentCard(number, pin) == null ? 0 : 1;
+        }
+
+        public int wrongCard() {
+            System.out.println("\nWrong card number or PIN!");
+            return 0;
+        }
+
+        public int loggedIn() {
+            System.out.println("\nYou have successfully logged in!");
+            return 0;
+        }
+
+        public int accountMenu() {
+            System.out.println("\n1. Balance\n" +
+                                       "2. Log out\n" +
+                                       "0. Exit");
+            return userChoice();
+        }
+
+        public int balance() {
+            System.out.println("\nBalance: 0");
+            return 0;
+        }
+
+        public int logOut() {
+            System.out.println("\nYou have successfully logged out!");
+            return 0;
+        }
+
+        private int userChoice() {
+            return Integer.parseInt(scanner.nextLine());
+        }
+    }
+  learner_created: true
+- name: src/banking/dao/Card.java
+  visible: true
+  text: |
+    package banking.dao;
+
+    public class Card {
+        private String number;
+        private String pin;
+
+        public Card(String number, String pin) {
+            this.number = number;
+            this.pin = pin;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public String getPin() {
+            return pin;
+        }
+    }
+  learner_created: true
+- name: src/banking/dao/CardDao.java
+  visible: true
+  text: |
+    package banking.dao;
+
+    public interface CardDao {
+
+        Card getCard(String number);
+
+        boolean numberIsUnique(String number);
+
+        void saveCard(Card card);
+    }
+  learner_created: true
+- name: src/banking/dao/impl/sql/package-info.java
+  visible: true
+  text: package banking.dao.impl.sql;
+  learner_created: true
+- name: src/banking/dao/impl/memory/MemoryCardDao.java
+  visible: true
+  text: |
+    package banking.dao.impl.memory;
+
+    import banking.dao.Card;
+    import banking.dao.CardDao;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+
+    public class MemoryCardDao implements CardDao {
+
+        private final Map<String, Card> cardMap = new LinkedHashMap<>();
+
+        @Override
+        public Card getCard(String number) {
+            return cardMap.get(number);
+        }
+
+        @Override
+        public boolean numberIsUnique(String number) {
+            return !cardMap.containsKey(number);
+        }
+
+        @Override
+        public void saveCard(Card card) {
+            cardMap.put(card.getNumber(), card);
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/93/stages/516/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Tue, 02 Nov 2021 21:52:53 UTC
 record: -1

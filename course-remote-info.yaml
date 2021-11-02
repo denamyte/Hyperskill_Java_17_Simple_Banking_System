@@ -3,14 +3,14 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/295560/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Sat, 09 Oct 2021 21:58:28 UTC
+update_date: Tue, 02 Nov 2021 19:40:19 UTC
 stages:
 - id: 515
   step: 8425
   is_completed: true
 - id: 516
   step: 8426
-  is_completed: false
+  is_completed: true
 - id: 517
   step: 8427
   is_completed: false
@@ -167,6 +167,8 @@ topics:
     theory_id: 7123
   - title: Literals
     theory_id: 7400
+  - title: Expressions
+    theory_id: 7409
   - title: The NULL value
     theory_id: 7907
   - title: Basic SELECT statement
@@ -187,8 +189,6 @@ topics:
     theory_id: 9519
   - title: JDBC Statements
     theory_id: 9955
-  - title: Expressions
-    theory_id: 7409
   3:
   - title: Results ordering
     theory_id: 8627

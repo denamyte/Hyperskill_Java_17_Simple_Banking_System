@@ -25,7 +25,7 @@ public class StateTransition {
     }
 
     public String nextState() {
-        return inputToStateMap.get(inputGenerator.getAsInt());
+        return inputToStateMap.getOrDefault(inputGenerator.getAsInt(), "");
     }
 
     public String getStateName() {

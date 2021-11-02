@@ -40,17 +40,13 @@ public class BankingSystemMenus {
         System.out.println("Enter your PIN:");
         final String pin = scanner.nextLine();
 
-        return dataFacade.getCurrentCard(number, pin) == null ? 0 : 1;
-    }
-
-    public int wrongCard() {
-        System.out.println("\nWrong card number or PIN!");
-        return 0;
-    }
-
-    public int loggedIn() {
-        System.out.println("\nYou have successfully logged in!");
-        return 0;
+        final int result = dataFacade.getCurrentCard(number, pin) == null ? 0 : 1;
+        if (result == 0) {
+            System.out.println("\nWrong card number or PIN!");
+        } else {
+            System.out.println("\nYou have successfully logged in!");
+        }
+        return result;
     }
 
     public int accountMenu() {

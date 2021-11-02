@@ -19,9 +19,6 @@ class StateMachineFactory {
         CREATE_ACCOUNT,
         LOG_INTO_ACCOUNT,
 
-        WRONG_CARD,
-        LOGGED_IN,
-
         ACCOUNT_MENU,
         BALANCE,
         LOG_OUT,
@@ -51,18 +48,9 @@ class StateMachineFactory {
                                     menus::createCard
                 ),
                 new StateTransition(State.LOG_INTO_ACCOUNT.name(),
-                                    Map.of(0, State.WRONG_CARD.name(),
-                                           1, State.LOGGED_IN.name()),
+                                    Map.of(0, State.MAIN_MENU.name(),
+                                           1, State.ACCOUNT_MENU.name()),
                                     menus::logIntoAccount
-                ),
-
-                new StateTransition(State.WRONG_CARD.name(),
-                                    Map.of(0, State.MAIN_MENU.name()),
-                                    menus::wrongCard
-                ),
-                new StateTransition(State.LOGGED_IN.name(),
-                                    Map.of(0, State.ACCOUNT_MENU.name()),
-                                    menus::loggedIn
                 ),
 
                 new StateTransition(State.ACCOUNT_MENU.name(),
